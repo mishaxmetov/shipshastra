@@ -4,14 +4,7 @@ document.getElementById('calculateBtn').addEventListener('click', calculate);
 function calculate() {
     // All plans are now paid, no free trials
     
-    // Check if subscription is active
-    const subscriptionExpiry = parseInt(localStorage.getItem('subscriptionExpiry')||'0',10);
-    if (Date.now() >= subscriptionExpiry) {
-        // Show payment overlay if subscription has expired
-        const overlay = document.getElementById('paymentOverlay');
-        if (overlay) overlay.style.display = 'flex';
-        return; // Stop execution
-    }
+  
     
     // Show loading state
     const calculateBtn = document.getElementById('calculateBtn');
