@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>शिल्पशास्त्र</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<style>
+    .payment-container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        color: #333;
+        max-width: 500px;
+        width: 90%;
+    }
+    .pay-now-btn {
+        background: #2ecc71;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    .payment-message {
+        margin: 20px 0;
+        font-size: 18px;
+    }
+    /* --- Premium Look Overrides --- */
+    .payment-container{
+        background: linear-gradient(135deg,#ffffff 0%,#faf5ef 100%);
+        border: 3px solid #1d388a; /* primary accent */
+        box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        animation: scaleIn 0.4s ease-out;
+    }
+    .payment-container h2{
+        font-family: 'Poppins',sans-serif;
+        font-weight:600;
+        color:#1d388a;
+        margin-bottom:10px;
+    }
+    .payment-message{
+        color:#555;
+    }
+    .pay-now-btn{
+        background: linear-gradient(45deg,#1d388a 0%,#2449b0 50%,#2f5bd0 100%);
+        color:#fff;
+        font-weight:600;
+        box-shadow:0 4px 12px rgba(0,0,0,0.2);
+        transition: transform .2s, box-shadow .2s;
+    }
+    .pay-now-btn:hover{
+        transform: translateY(-2px) scale(1.03);
+        box-shadow:0 8px 18px rgba(0,0,0,0.3);
+    }
+    @keyframes scaleIn{
+        from{transform:scale(0.8); opacity:0;}
+        to{transform:scale(1); opacity:1;}
+    }
+    /* Paywall overlay styles */
+    .payment-overlay{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(3px);z-index:10000;}
+    .plans-wrapper{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;max-height:80vh;overflow-y:auto;padding-right:6px;}
+    /* smooth scrolling indicator */
+    .plans-wrapper::-webkit-scrollbar{width:6px;}
+    .plans-wrapper::-webkit-scrollbar-thumb{background:#1d388a;border-radius:3px;}
+    /* Premium minimalist card */
+    .plan-card{background:#ffffff;padding:2rem 2.25rem;border-radius:12px;max-width:280px;width:92%;text-align:center;border:1.5px solid rgba(29,56,138,0.25);box-shadow:0 8px 24px rgba(0,0,0,0.08);transition:transform .25s ease, box-shadow .25s ease;}
+    .plan-card h2,.plan-card h3{margin:0 0 0.75rem;font-size:1.35rem;color:#1d388a;font-weight:600;}
+    .plan-price{font-size:1.7rem;font-weight:700;color:#1d388a;margin-bottom:8px;}
+    .plan-duration{font-size:0.95rem;color:#555;margin-bottom:16px;line-height:1.35;}
+    .plan-card .pay-now-btn{width:100%;}
+    .plan-card:hover{transform:translateY(-6px);box-shadow:0 12px 28px rgba(0,0,0,0.12);}
+    /* Remove previous flashy styles */
+    .plan-card::before,.plan-card::after{display:none;}
+    @keyframes spinBorder{from{opacity:1;}to{opacity:1;}}
+    .plan-card:hover{transform:translateY(-6px);box-shadow:0 12px 28px rgba(0,0,0,0.12);}
+    /* Premium Splash Screen Styles */
+    #splashScreen{
+        position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg, #1d388a 0%, #2449b0 50%, #2f5bd0 100%);display:flex;flex-direction:column;justify-content:center;align-items:center;opacity:1;transition:opacity .8s ease;z-index:20000;
+    }
+    #splashScreen::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSI0MCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1vcGFjaXR5PSIwLjA1Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+PC9zdmc+');
+        opacity: 0.6;
+    }
+    #splashScreen #splashLogo{
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
+        animation: pulseLogo 2s infinite alternate ease-in-out, fadeIn 1.2s ease-out;
+        z-index: 1;
+        border-radius: 15px;
+        background: rgba(255,255,255,0.9);
+        padding: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.1);
+    }
+    #splashScreen .app-title {
+        color: #ffffff;
+        font-size: 28px;
+        font-weight: 600;
+        margin-top: 20px;
+        text-align: center;
+        letter-spacing: 0.8px;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        opacity: 0;
+        animation: fadeIn 1s ease-out 0.5s forwards;
+        z-index: 1;
+    }
+    #splashScreen .app-subtitle {
+        color: rgba(255,255,255,0.9);
+        font-size: 16px;
+        margin-top: 8px;
+        text-align: center;
+        letter-spacing: 0.5px;
+        opacity: 0;
+        animation: fadeIn 1s ease-out 0.8s forwards;
+        z-index: 1;
+    }
+    #splashScreen .powered-by{
+        position:absolute;
+        bottom:15px;
+        width:100%;
+        text-align:center;
+        font-size:12px;
+        color:rgba(255,255,255,0.7);
+        font-family:'Poppins',sans-serif;
+        z-index: 1;
+        letter-spacing: 0.3px;
+    }
+    .loading-indicator {
+        position: absolute;
+        bottom: 45px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+    }
+    .loading-dot {
+        width: 6px;
+        height: 6px;
+        margin: 0 3px;
+        border-radius: 50%;
+        background-color: #ffffff;
+        opacity: 0.6;
+        animation: loadingDot 1.4s infinite ease-in-out both;
+    }
+    .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+    .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+    
+    @keyframes pulseLogo {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.05); }
+    }
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes loadingDot {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+    }
+    
+    /* Mobile responsive styles */
+    @media (max-width: 480px) {
+        #splashScreen #splashLogo {
+            width: 120px;
+            height: 120px;
+            padding: 10px;
+            border-radius: 12px;
+        }
+        #splashScreen .app-title {
+            font-size: 24px;
+            margin-top: 15px;
+        }
+        #splashScreen .app-subtitle {
+            font-size: 14px;
+            margin-top: 6px;
+        }
+        .loading-indicator {
+            bottom: 40px;
+        }
+        #splashScreen .powered-by {
+            bottom: 12px;
+            font-size: 10px;
+        }
+    }
+</style>
+
+<body>
+    <!-- Premium Splash Screen -->
+    <div id="splashScreen">
+        <img id="splashLogo" src="icon.jpeg" alt="Kundan Shilp – Temple Architect & Contractor">
+        <div class="app-title">शिल्पशास्त्र</div>
+        <div class="app-subtitle">मंदिर वास्तुकला का आधुनिक समाधान</div>
+        <div class="loading-indicator">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+        <div class="powered-by">Powered by &copy; Kundan Shilp – Masters of Temple Architecture.</div>
+    </div>
+
+    
+    <nav class="navbar">
+        <div class="logo" id="logoText">शिल्पशास्त्र</div>
+                <select id="langSelect" aria-label="Language selector" style="margin-left:15px;padding:4px 6px;border-radius:4px;">
+                    <option value="hi">हिन्दी</option>
+                    <option value="en">English</option>
+                    <option value="gu">ગુજરાતી</option>
+                </select>
+        <div class="dropdown">
+            <button class="dropbtn">मेनू</button>
+            <div class="dropdown-content">
+                <a href="index.html">मुख्य पृष्ठ</a>
+                <a href="tirthankara.html">तीर्थंकर</a>
+                <a href="about.html">हमारे बारे में</a>
+                <a href="contact.html">संपर्क</a>
+                <a href="refund-policy.html">धन वापसी नीति</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="calculator-form">
+            <h2>शिल्पशास्त्र</h2>
+            <div class="input-section">
+                <div class="input-group">
+                    <label class="input-label">लंबाई</label>
+                    <div class="measurement-row">
+                        <div class="input-with-unit">
+                            <input type="number" id="feet1" class="measurement-input" placeholder="0" min="0">
+                            <span class="unit">फुट</span>
+                        </div>
+                        <div class="input-with-unit">
+                            <input type="number" id="inches1" class="measurement-input" placeholder="0" min="0" max="11">
+                            <span class="unit">इंच</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">चौड़ाई</label>
+                    <div class="measurement-row">
+                        <div class="input-with-unit">
+                            <input type="number" id="feet2" class="measurement-input" placeholder="0" min="0">
+                            <span class="unit">फुट</span>
+                        </div>
+                        <div class="input-with-unit">
+                            <input type="number" id="inches2" class="measurement-input" placeholder="0" min="0" max="11">
+                            <span class="unit">इंच</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button id="calculateBtn" class="calculate-btn">गणना करें</button>
+            
+            <div id="resultsSection" class="results" style="display: none;">
+                <div class="result-item">
+                    <label>क्षेत्रफळ:</label>
+                    <span id="area"></span>
+                </div>
+                <div class="result-item">
+                    <label>मूळ राशि:</label>
+                    <span id="moolRashi"></span>
+                </div>
+                <div class="result-item">
+                    <label>आय:</label>
+                    <span id="aay"></span>
+                </div>
+                <div class="result-item">
+                    <label>नक्षत्र:</label>
+                    <span id="nakshatra"></span>
+                </div>
+                <div class="result-item">
+                    <label>व्यय:</label>
+                    <span id="vyaya"></span>
+                </div>
+                <div class="result-item">
+                    <label>अंशक:</label>
+                    <span id="anshak"></span>
+                </div>
+                <div class="result-item">
+                    <label>करण:</label>
+                    <span id="karan"></span>
+                </div>
+                <div class="result-item">
+                    <label>तत्व:</label>
+                    <span id="tatva"></span>
+                </div>
+                <div class="result-item">
+                    <label>दिशा:</label>
+                    <span id="disha"></span>
+                </div>
+                
+                <!-- Calculation Details Section -->
+                <div class="result-item calculation-details">
+                    <label>गणना विवरण:</label>
+                    <div class="calculation-steps">
+                        <div class="step">
+                            <strong>इंच में परिवर्तन:</strong>
+                            <div id="step1" class="step-detail"></div>
+                        </div>
+                        <div class="step">
+                            <strong>क्षेत्रफल:</strong>
+                            <div id="step2" class="step-detail"></div>
+                        </div>
+                        <div class="step">
+                            <strong>मूल राशि:</strong>
+                            <div id="step3" class="step-detail"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add this after your calculator form -->
+        <!-- Add this button in the button-container div after other direction buttons -->
+        <div class="button-container">
+            <div class="button-group">
+                <a href="nakshatra.html" class="direction-btn">
+                    <i class="fas fa-star"></i>
+                    नक्षत्र वैर
+                </a>
+                <a href="purva.html" class="direction-btn">
+                    <i class="fas fa-arrow-right"></i>
+                    पूर्व दिशा
+                </a>
+            </div>
+            <div class="button-group">
+                <a href="paschim.html" class="direction-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    पश्चिम दिशा
+                </a>
+                <a href="uttar.html" class="direction-btn">
+                    <i class="fas fa-arrow-up"></i>
+                    उत्तर दिशा
+                </a>
+            </div>
+            <div class="button-group">
+                <a href="dakshin.html" class="direction-btn">
+                    <i class="fas fa-arrow-down"></i>
+                    दक्षिण दिशा
+                </a>
+                <a href="tirthankara.html" class="direction-btn">
+                    <i class="fas fa-om"></i>
+                    जैन तीर्थंकर
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>2025 Shilpashastra – All Rights Reserved by <a href="https://kundanshilp.com/" target="_blank">Kundan Shilp</a>, Temple Architect & Contractor.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        // Enhanced splash screen animation that shows until app is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const splash = document.getElementById('splashScreen');
+            
+            // Always show splash screen when app starts
+            if (splash) {
+                splash.style.display = 'flex';
+                splash.style.opacity = '1';
+                
+                // Ensure all content is loaded before hiding the splash screen
+                window.addEventListener('load', () => {
+                    // Show splash screen for 3 seconds for better premium feel
+                    setTimeout(() => {
+                        // Fade out splash screen with smooth transition
+                        splash.style.opacity = '0';
+                        // Remove from DOM after transition completes
+                        setTimeout(() => {
+                            splash.style.display = 'none';
+                        }, 800); // Match transition duration from CSS
+                    }, 3000);
+                });
+            }
+            
+            // Add event listener for page visibility change
+            document.addEventListener('visibilitychange', () => {
+                // When user comes back to the app after switching to another app/tab
+                if (document.visibilityState === 'visible' && splash) {
+                    // Check if user is returning from outside the app
+                    const wasHidden = sessionStorage.getItem('appWasHidden');
+                    if (wasHidden === 'true') {
+                        // Show splash screen again
+                        splash.style.display = 'flex';
+                        splash.style.opacity = '1';
+                        
+                        // Hide after 3 seconds
+                        setTimeout(() => {
+                            splash.style.opacity = '0';
+                            setTimeout(() => {
+                                splash.style.display = 'none';
+                            }, 800);
+                        }, 3000);
+                        
+                        // Reset the hidden state
+                        sessionStorage.removeItem('appWasHidden');
+                    }
+                } else if (document.visibilityState === 'hidden') {
+                    // User has switched away from the app
+                    sessionStorage.setItem('appWasHidden', 'true');
+                }
+            });
+            
+            // Add event listener for page unload/refresh
+            window.addEventListener('beforeunload', () => {
+                // Remove any free trial related session storage items
+                sessionStorage.removeItem('freeTrialStarted');
+                sessionStorage.removeItem('freeTrialExpiry');
+                sessionStorage.removeItem('calculationDone');
+                // Don't remove appWasHidden here to maintain state across refreshes
+            });
+        });
+    </script>
+    <script>
+        // -------- Multilanguage support --------
+const translations = {
+    hi:{
+        logo:'शिल्पशास्त्र',menu:'मेनू',navHome:'मुख्य पृष्ठ',navTirth:'तीर्थंकर',navAbout:'हमारे बारे में',navContact:'संपर्क',navRefund:'धन वापसी नीति',calc:'गणना करें',len:'लंबाई',wid:'चौड़ाई',area:'क्षेत्रफळ:',mool:'मूळ राशि:',aay:'आय:'},
+    en:{
+        logo:'ShilpShastra',menu:'Menu',navHome:'Home',navTirth:'Tirthankara',navAbout:'About Us',navContact:'Contact',navRefund:'Refund Policy',calc:'Calculate',len:'Length',wid:'Width',area:'Area:',mool:'Base Amount:',aay:'Income:'},
+    gu:{
+        logo:'શિલ્પશાસ્ત્ર',menu:'મેનુ',navHome:'મુખ્ય પેજ',navTirth:'તિર્થંકર',navAbout:'અમારા વિશે',navContact:'સંપર્ક',navRefund:'પરત નીતિ',calc:'ગણતરી કરો',len:'લંબાઈ',wid:'ચોડાઈ',area:'ક્ષેત્રફળ:',mool:'મૂળ રકમ:',aay:'આવક:'}
+};
+function applyLang(lang){
+    const t=translations[lang]||translations.hi;
+    document.getElementById('logoText').innerText=t.logo;
+    document.querySelector('.dropbtn').innerText=t.menu;
+    const navLinks=document.querySelectorAll('.dropdown-content a');
+    if(navLinks.length>=5){
+        navLinks[0].innerText=t.navHome;
+        navLinks[1].innerText=t.navTirth;
+        navLinks[2].innerText=t.navAbout;
+        navLinks[3].innerText=t.navContact;
+        navLinks[4].innerText=t.navRefund;
+    }
+    document.getElementById('calculateBtn').innerText=t.calc;
+    // labels
+    document.querySelectorAll('.input-label')[0].innerText=t.len;
+    document.querySelectorAll('.input-label')[1].innerText=t.wid;
+    // result labels
+    document.querySelectorAll('#resultsSection .result-item label')[0].innerText=t.area;
+    document.querySelectorAll('#resultsSection .result-item label')[1].innerText=t.mool;
+    document.querySelectorAll('#resultsSection .result-item label')[2].innerText=t.aay;
+}
+const langSel=document.getElementById('langSelect');
+langSel.addEventListener('change',()=>{
+    localStorage.setItem('preferredLang',langSel.value);
+    applyLang(langSel.value);
+});
+// Apply saved language
+const savedLang=localStorage.getItem('preferredLang')||'hi';
+langSel.value=savedLang;
+applyLang(savedLang);
+// ---------------------------------------
+    </script>
+    <script>
+    // --- Razorpay paywall gating ---
+    document.addEventListener('DOMContentLoaded', ()=>{
+        const overlay=document.getElementById('paymentOverlay');
+        const PLAN6_MS  = 1000*60*60*24*30*6;   // ~6 months
+        const PLAN12_MS = 1000*60*60*24*30*12;  // ~12 months
+        const ONE_CALC_DURATION = 60 * 1000; // 60 seconds duration for single calculation
+        
+        function hasAccess(){
+            // Check if subscription is active
+            const subscriptionExpiry = parseInt(localStorage.getItem('subscriptionExpiry')||'0',10);
+            
+            // All plans are now paid, no special handling for free plans
+            return (Date.now() < subscriptionExpiry);
+        }
+
+        function updateOverlay(){
+            overlay.style.display = hasAccess()? 'none':'flex';
+        }
+
+        // Initial check
+        updateOverlay();
+        // Re-check periodically
+        setInterval(updateOverlay, 5000); // check more frequently
+
+        function openCheckout(amountPaise,durationMs,description){
+            // All plans are paid, no special handling for free plans
+            const options={
+                key:'rzp_live_pVB3uUqNMbygKp',
+                amount:amountPaise,
+                currency:'INR',
+                name:'ShilpShastra',
+                description:description,
+                handler:function(){
+                    const newExpiry=Date.now()+durationMs;
+                    localStorage.setItem('subscriptionExpiry',newExpiry.toString());
+                    // Remove free plan related items
+                    localStorage.removeItem('freeCalcPlan');
+                    localStorage.removeItem('calculationDone');
+                    overlay.style.display='none';
+                    
+                    // Show success notification
+                    const notification = document.createElement('div');
+                    notification.style.position = 'fixed';
+                    notification.style.top = '20px';
+                    notification.style.left = '50%';
+                    notification.style.transform = 'translateX(-50%)';
+                    notification.style.backgroundColor = '#00a651';
+                    notification.style.color = 'white';
+                    notification.style.padding = '12px 20px';
+                    notification.style.borderRadius = '5px';
+                    notification.style.zIndex = '9999';
+                    notification.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+                    notification.style.fontFamily = 'Poppins, sans-serif';
+                    notification.style.textAlign = 'center';
+                    notification.style.minWidth = '280px';
+                    // Show different message based on plan duration
+                    if (durationMs === ONE_CALC_DURATION) {
+                        notification.innerHTML = '🎉 आपका 1 कैलकुलेशन प्लान सक्रिय हो गया है! यह 60 सेकंड के लिए मान्य है।';
+                    } else {
+                        notification.innerHTML = '🎉 आपका सब्सक्रिप्शन सक्रिय हो गया है!';
+                    }
+                    document.body.appendChild(notification);
+                    
+                    // Remove notification after 5 seconds
+                    setTimeout(() => {
+                        notification.style.opacity = '0';
+                        notification.style.transition = 'opacity 0.5s ease';
+                        setTimeout(() => notification.remove(), 500);
+                    }, 5000);
+                },
+                theme:{color:'#1d388a'}
+            };
+            new Razorpay(options).open();
+        }
+
+        document.getElementById('freeCalcBtn').addEventListener('click',(e)=>{
+            e.preventDefault();
+            openCheckout(49900, ONE_CALC_DURATION, '1 कैलकुलेशन प्लान');
+        });
+
+        document.getElementById('plan6Btn').addEventListener('click',(e)=>{
+            e.preventDefault();
+            openCheckout(499900, PLAN6_MS, '6-month subscription');
+        });
+
+        document.getElementById('plan12Btn').addEventListener('click',(e)=>{
+            e.preventDefault();
+            openCheckout(799900, PLAN12_MS, '12-month subscription');
+        });
+    });
+    </script>
+    <script>
+        // रीलोड फंक्शन हटा दिया गया है
+        // No reload blocking code here
+    </script>
+</body>
+</html>
